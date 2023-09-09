@@ -30,14 +30,14 @@ QStringList MainWindow::GetDiskList(){
 void MainWindow::SetDiskList(QTableView *diskListWidget){
     QStandardItemModel *nmodel = new QStandardItemModel(this);
     // 设置表头
-    nmodel->setColumnCount(7);
+    nmodel->setColumnCount(6);
     nmodel->setHeaderData(0, Qt::Horizontal, "分区");
     nmodel->setHeaderData(1, Qt::Horizontal, "分区格式");
     nmodel->setHeaderData(2, Qt::Horizontal, "剩余空间");
     nmodel->setHeaderData(3, Qt::Horizontal, "全部空间");
     nmodel->setHeaderData(4, Qt::Horizontal, "设置挂载点");
     nmodel->setHeaderData(5, Qt::Horizontal, "是否格式化");
-    nmodel->setHeaderData(6, Qt::Horizontal, "");
+    //nmodel->setHeaderData(6, Qt::Horizontal, "");
     // 设置不可编辑
     diskListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     // 设置选择整行且只能单选
@@ -72,26 +72,6 @@ void MainWindow::SetDiskList(QTableView *diskListWidget){
         }
     }
     diskListWidget->setModel(nmodel);
-    for(int i = 0; i < count; i++){
-        QPushButton *button = new QPushButton("编辑");
-        connect(button, &QPushButton::clicked, this, &MainWindow::SetPart);
-        diskListWidget->setIndexWidget(nmodel->index(i, 6), button);
-    }
-}
-
-void MainWindow::SetPart(){
-    // 获取选择内容
-    int index = ui->diskChooser->currentIndex().row();
-    QAbstractItemModel *model = ui->diskChooser->model();
-    QString part = model->index(index, 0).data().toString();
-    EditPartDialog *dialog = new EditPartDialog(part, &partSetMountPoint, &partSetPartFormat, this);
-    // 堵塞线程
-    dialog->setAttribute(Qt::WA_ShowModal, true);
-    dialog->show();
-    if(dialog->exec()){
-        // 只有在按确定时才刷新列表
-        SetDiskList(ui->diskChooser);
-    }
 }
 
 // 退出程序
@@ -99,5 +79,41 @@ void MainWindow::on_action_exit_triggered()
 {
     QApplication *app;
     app->exit();
+}
+
+
+void MainWindow::on_refreshDiskList_clicked()
+{
+    SetDiskList(ui->diskChooser);
+}
+
+
+void MainWindow::on_editChoosePart_clicked()
+{
+    // 获取选择内容
+    int index = ui->diskChooser->currentIndex().row();
+    if(index == -1){
+        QMessageBox::information(this, "提示", "请先选择分区才能编辑");
+        return;
+    }
+    QAbstractItemModel *model = ui->diskChooser->model();
+    QString part = model->index(index, 0).data().toString();
+    // 创建对话框
+    EditPartDialog *dialog = new EditPartDialog(part, &partSetMountPoint, &partSetPartFormat, this);
+    // 堵塞线程
+    dialog->setAttribute(Qt::WA_ShowModal, true);
+    dialog->show();
+    if(dialog->exec()){
+        // 只有在按确定时才刷新列表
+        SetDiskList(ui->diskChooser);
+        QString showMsg = "当前状态：设置" + part;
+        if(partSetMountPoint.count(part)){
+            showMsg += "挂载点为" + partSetMountPoint.value(part);
+        }
+        if(partSetPartFormat.count(part)){
+            showMsg += "并格式化为" + partSetPartFormat.value(part) + "格式";
+        }
+        ui->statusbar->showMessage(showMsg);
+    }
 }
 

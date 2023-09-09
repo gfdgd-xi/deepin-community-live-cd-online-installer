@@ -19,8 +19,11 @@ public:
 private slots:
     void on_action_exit_triggered();
 
+    void on_refreshDiskList_clicked();
+
+    void on_editChoosePart_clicked();
+
 private:
-    void SetPart();
     Ui::MainWindow *ui;
     void SetDiskList(QTableView *diskListWidget);
     QStringList GetDiskList();
