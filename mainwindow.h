@@ -24,6 +24,7 @@ private:
     Ui::MainWindow *ui;
     void SetDiskList(QTableView *diskListWidget);
     QStringList GetDiskList();
-    QMap<QString, QString> partSet;
+    QMap<QString, QString> partSetMountPoint;
+    QMap<QString, QString> partSetPartFormat;
 };
 #endif // MAINWINDOW_H

@@ -30,13 +30,14 @@ QStringList MainWindow::GetDiskList(){
 void MainWindow::SetDiskList(QTableView *diskListWidget){
     QStandardItemModel *nmodel = new QStandardItemModel(this);
     // 设置表头
-    nmodel->setColumnCount(6);
+    nmodel->setColumnCount(7);
     nmodel->setHeaderData(0, Qt::Horizontal, "分区");
     nmodel->setHeaderData(1, Qt::Horizontal, "分区格式");
     nmodel->setHeaderData(2, Qt::Horizontal, "剩余空间");
     nmodel->setHeaderData(3, Qt::Horizontal, "全部空间");
     nmodel->setHeaderData(4, Qt::Horizontal, "设置挂载点");
-    nmodel->setHeaderData(5, Qt::Horizontal, "");
+    nmodel->setHeaderData(5, Qt::Horizontal, "是否格式化");
+    nmodel->setHeaderData(6, Qt::Horizontal, "");
     // 设置不可编辑
     diskListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     // 设置选择整行且只能单选
@@ -58,25 +59,39 @@ void MainWindow::SetDiskList(QTableView *diskListWidget){
     qDebug() << totalSpaceList;
     int count = diskPathList.size();
     for(int i = 0; i < count; i++){
-        nmodel->setItem(i, 0, new QStandardItem(diskPathList.at(i)));
+        QString diskPath = diskPathList.at(i);
+        nmodel->setItem(i, 0, new QStandardItem(diskPath));
         nmodel->setItem(i, 1, new QStandardItem(diskFormatList.at(i)));
         nmodel->setItem(i, 2, new QStandardItem(freeSpaceList.at(i)));
         nmodel->setItem(i, 3, new QStandardItem(totalSpaceList.at(i)));
+        if(partSetMountPoint.count(diskPath)){
+            nmodel->setItem(i, 4, new QStandardItem(partSetMountPoint.value(diskPath)));
+        }
+        if(partSetPartFormat.count(diskPath)){
+            nmodel->setItem(i, 5, new QStandardItem(partSetPartFormat.value(diskPath)));
+        }
     }
     diskListWidget->setModel(nmodel);
     for(int i = 0; i < count; i++){
         QPushButton *button = new QPushButton("编辑");
         connect(button, &QPushButton::clicked, this, &MainWindow::SetPart);
-        diskListWidget->setIndexWidget(nmodel->index(i, 5), button);
+        diskListWidget->setIndexWidget(nmodel->index(i, 6), button);
     }
 }
 
 void MainWindow::SetPart(){
-    EditPartDialog *dialog = new EditPartDialog("/dev/sda1", &partSet, this);
+    // 获取选择内容
+    int index = ui->diskChooser->currentIndex().row();
+    QAbstractItemModel *model = ui->diskChooser->model();
+    QString part = model->index(index, 0).data().toString();
+    EditPartDialog *dialog = new EditPartDialog(part, &partSetMountPoint, &partSetPartFormat, this);
     // 堵塞线程
     dialog->setAttribute(Qt::WA_ShowModal, true);
     dialog->show();
-    dialog->exec();
+    if(dialog->exec()){
+        // 只有在按确定时才刷新列表
+        SetDiskList(ui->diskChooser);
+    }
 }
 
 // 退出程序
