@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QListWidget>
+#include <QTableView>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,6 +21,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    void SetDiskList(QListWidget *diskListWidget);
+    void SetDiskList(QTableView *diskListWidget);
+    QStringList GetDiskList();
 };
 #endif // MAINWINDOW_H

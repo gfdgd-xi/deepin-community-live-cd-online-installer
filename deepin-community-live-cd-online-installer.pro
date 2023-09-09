@@ -13,10 +13,12 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    diskcontrol.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    diskcontrol.h \
     mainwindow.h
 
 FORMS += \
