@@ -14,14 +14,17 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 SOURCES += \
     diskcontrol.cpp \
+    editpartdialog.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     diskcontrol.h \
+    editpartdialog.h \
     mainwindow.h
 
 FORMS += \
+    editpartdialog.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

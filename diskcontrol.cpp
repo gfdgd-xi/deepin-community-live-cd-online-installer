@@ -9,8 +9,10 @@
 
 DiskControl::DiskControl()
 {
+    // 检测是否以 root 权限运行
+    // 该库需要以 root 权限运行
     if(!geteuid() == 0){
-        throw "Don't run program with root!";
+        throw "Please run program with root!";
     }
 }
 
@@ -30,7 +32,6 @@ void DiskControl::GetDiskInfo(QStringList *diskPath, QStringList *diskFormat, QS
     freeSpaceList->clear();
     totalSpaceList->clear();
     mountPathList->clear();
-    //
     QStringList diskList;
     QString infoStr = GetCommandReturn("fdisk -l");
     // 筛选字符串
@@ -52,10 +53,12 @@ void DiskControl::GetDiskInfo(QStringList *diskPath, QStringList *diskFormat, QS
     // 获取分区格式和大小
     for (int i = 0; i < diskPath->size(); i++){
         QString disk = diskPath->at(i);
-        QStringList resultList = GetCommandReturn("df -T " + disk + "").split("\n").at(1).trimmed().split(" ");
+        QStringList resultList = GetCommandReturn("df -H -T " + disk + "").split("\n").at(1).trimmed().split(" ");
         resultList.removeAll("");
         qDebug() << resultList;
         diskFormat->append(resultList.at(1));
         mountPathList->append(resultList.at(resultList.count() - 1));
+        freeSpaceList->append(resultList.at(resultList.count() - 3));
+        totalSpaceList->append(resultList.at(resultList.count() - 5));
     }
 }
