@@ -23,6 +23,16 @@ private slots:
 
     void on_editChoosePart_clicked();
 
+    void on_userName_textChanged(const QString &arg1);
+
+    void on_hostName_textChanged(const QString &arg1);
+
+    void on_rootPassword0_textChanged(const QString &arg1);
+
+    void on_rootPassword1_textChanged(const QString &arg1);
+
+    void on_action_about_triggered();
+
 private:
     Ui::MainWindow *ui;
     void SetDiskList(QTableView *diskListWidget);

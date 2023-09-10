@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>编辑分区</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icon.qrc">
+    <normaloff>:/icon/icon.svg</normaloff>:/icon/icon.svg</iconset>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
@@ -175,7 +179,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

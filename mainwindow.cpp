@@ -7,6 +7,7 @@
 #include <QDebug>
 #include "diskcontrol.h"
 #include "editpartdialog.h"
+#include "aboutprogram.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -115,5 +116,55 @@ void MainWindow::on_editChoosePart_clicked()
         }
         ui->statusbar->showMessage(showMsg);
     }
+    delete dialog;
+}
+
+
+void MainWindow::on_userName_textChanged(const QString &arg1)
+{
+    // 自动清除空格
+    ui->userName->setText(ui->userName->text().replace(" ", ""));
+}
+
+
+void MainWindow::on_hostName_textChanged(const QString &arg1)
+{
+    // 自动清除空格
+    ui->hostName->setText(ui->hostName->text().replace(" ", ""));
+}
+
+
+void MainWindow::on_rootPassword0_textChanged(const QString &arg1)
+{
+    // 如果密码不相同就显示提示
+    if(ui->rootPassword0->text() == ui->rootPassword1->text()){
+        ui->rootPasswordTips1->setText("再输一次root用户密码：");
+    }
+    else{
+        ui->rootPasswordTips1->setText("再输一次root用户密码：（两次密码不相同！）");
+    }
+}
+
+
+void MainWindow::on_rootPassword1_textChanged(const QString &arg1)
+{
+    // 如果密码不相同就显示提示
+    if(ui->rootPassword0->text() == ui->rootPassword1->text()){
+        ui->rootPasswordTips1->setText("再输一次root用户密码：");
+    }
+    else{
+        ui->rootPasswordTips1->setText("再输一次root用户密码：（两次密码不相同！）");
+    }
+}
+
+
+void MainWindow::on_action_about_triggered()
+{
+    // 显示关于窗口
+    AboutProgram program;
+    // 堵塞线程
+    program.setAttribute(Qt::WA_ShowModal, true);
+    program.show();
+    program.exec();
 }
 
