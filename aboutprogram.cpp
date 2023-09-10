@@ -12,6 +12,7 @@ AboutProgram::AboutProgram(QWidget *parent) :
     int year = currentdate.year();
     // 显示关于内容
     ui->information->setHtml("<p>Deepin Community Live CD 在线安装工具是一个能在 Live CD 上自动从互联网获取系统安装包安装系统的工具</p>"\
+                             "<p>目前支持安装 Debian</p>"\
                              "<p>程序版本：" + QString(APP_VERSION) + "</p>"\
                              "<p>QQ 交流群：881201853</p>"\
                              "<p>本程序依照 GPLV3 协议开源</p>"\
