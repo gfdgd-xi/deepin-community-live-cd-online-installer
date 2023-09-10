@@ -138,10 +138,21 @@ void MainWindow::on_rootPassword0_textChanged(const QString &arg1)
 {
     // 如果密码不相同就显示提示
     if(ui->rootPassword0->text() == ui->rootPassword1->text()){
-        ui->rootPasswordTips1->setText("再输一次root用户密码：");
+        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
+        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: green;'><b>√</b></a>");
     }
     else{
-        ui->rootPasswordTips1->setText("再输一次root用户密码：（两次密码不相同！）");
+        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>两次密码不相同！");
+    }
+    // 空密码提示
+    if(ui->rootPassword0->text() == ""){
+        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
+    }
+    else{
+        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
+    }
+    if(ui->rootPassword1->text() == ""){
+        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
     }
 }
 
@@ -150,10 +161,21 @@ void MainWindow::on_rootPassword1_textChanged(const QString &arg1)
 {
     // 如果密码不相同就显示提示
     if(ui->rootPassword0->text() == ui->rootPassword1->text()){
-        ui->rootPasswordTips1->setText("再输一次root用户密码：");
+        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
+        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: green;'><b>√</b></a>");
     }
     else{
-        ui->rootPasswordTips1->setText("再输一次root用户密码：（两次密码不相同！）");
+        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>两次密码不相同！");
+    }
+    // 空密码提示
+    if(ui->rootPassword0->text() == ""){
+        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
+    }
+    else{
+        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
+    }
+    if(ui->rootPassword1->text() == ""){
+        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
     }
 }
 
