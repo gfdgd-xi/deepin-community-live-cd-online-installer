@@ -304,6 +304,44 @@ void MainWindow::on_installButton_clicked()
         QMessageBox::critical(this, "错误", "用户密码不相同");
         return;
     }
+    // 检测用户名和计算机名是否合法
+    if(ui->hostName->text().size() < 2){
+        QMessageBox::critical(this, "错误", "主机名不合法");
+        return;
+    }
+    if(ui->userName->text().size() < 2){
+        QMessageBox::critical(this, "错误", "用户名不合法");
+        return;
+    }
+    // 检测是否有中文
+    QString userName = ui->userName->text();
+    for(int i = 0; i < userName.size(); i++){
+        QChar cha = userName.at(i);
+        ushort uni = cha.unicode();
+        if(uni >= 0x4E00 && uni <= 0x9FA5){
+            // 含有中文
+            QMessageBox::critical(this, "错误", "用户名不合法");
+            return;
+        }
+        if(specialSymbol.contains(userName.at(i))){
+            QMessageBox::critical(this, "错误", "用户名不合法");
+            return;
+        }
+    }
+    userName = ui->hostName->text();
+    for(int i = 0; i < userName.size(); i++){
+        QChar cha = userName.at(i);
+        ushort uni = cha.unicode();
+        if(uni >= 0x4E00 && uni <= 0x9FA5){
+            // 含有中文
+            QMessageBox::critical(this, "错误", "主机名不合法");
+            break;
+        }
+        if(specialSymbol.contains(userName.at(i))){
+            QMessageBox::critical(this, "错误", "主机名不合法");
+            break;
+        }
+    }
     // 这里先忽略合法性检测，直接显示窗口以调试
     //InstallSystemWindow *window = new InstallSystemWindow();
     //window->show();
