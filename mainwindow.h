@@ -42,11 +42,13 @@ private slots:
     void on_installButton_clicked();
 
 private:
+    QString GetCommandReturn(QString command);
     Ui::MainWindow *ui;
     void SetDiskList(QTableView *diskListWidget);
     QStringList GetDiskList();
     QMap<QString, QString> partSetMountPoint;
     QMap<QString, QString> partSetPartFormat;
     void PasswordCheck(QLabel *label0, QLabel *label1, QLineEdit *password0, QLineEdit *password1, QString labelTips0, QString labelTips1);
+    QStringList specialSymbol = {"`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "=", "|", "\\", "[", "]", "{", "}", ":", ";", "\"", "'", ",", "<", ">", "?", "/"};
 };
 #endif // MAINWINDOW_H

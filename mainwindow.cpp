@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 #include <QDebug>
 #include <QHostInfo>
+#include <QProcess>
 #include "diskcontrol.h"
 #include "editpartdialog.h"
 #include "aboutprogram.h"
@@ -16,9 +17,21 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QString info = GetCommandReturn("dmesg");
+    bool uefiBoot = info.contains("EFI v");
     // 设置程序标题
+
     this->setWindowTitle("Deepin Community Live CD 安装工具 " + QString(APP_VERSION));
+    if(uefiBoot){
+        this->setWindowTitle(this->windowTitle() + "（UEFI启动）");
+    }
+    else{
+        this->setWindowTitle(this->windowTitle() + "（传统启动）");
+    }
     SetDiskList(ui->diskChooser);
+    // 设置用户名和计算机名只能输入字母和数字
+    ui->userName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+-+_+$")));
+    ui->hostName->setValidator(new QRegExpValidator(QRegExp("[a-zA-Z0-9]+-+_+$")));
     // 读取当前用户名
     ui->userName->setText(qgetenv("USER"));
     // 读取当前计算机名
@@ -141,6 +154,21 @@ void MainWindow::on_userName_textChanged(const QString &arg1)
     else{
         ui->userNameTips->setText("用户名：<a style='color: green;'><b>√</b></a>");
     }
+    // 检测是否有中文
+    QString userName = ui->userName->text();
+    for(int i = 0; i < userName.size(); i++){
+        QChar cha = userName.at(i);
+        ushort uni = cha.unicode();
+        if(uni >= 0x4E00 && uni <= 0x9FA5){
+            // 含有中文
+            ui->userNameTips->setText("用户名：<a style='color: red;'><b>×</b></a>该用户名不合法（不能有中文）");
+            break;
+        }
+        if(specialSymbol.contains(userName.at(i))){
+            ui->userNameTips->setText("用户名：<a style='color: red;'><b>×</b></a>不能含有特殊符号");
+            break;
+        }
+    }
 }
 
 
@@ -154,6 +182,21 @@ void MainWindow::on_hostName_textChanged(const QString &arg1)
     }
     else{
         ui->hostNameTips->setText("主机名：<a style='color: green;'><b>√</b></a>");
+    }
+    // 检测是否有中文
+    QString userName = ui->hostName->text();
+    for(int i = 0; i < userName.size(); i++){
+        QChar cha = userName.at(i);
+        ushort uni = cha.unicode();
+        if(uni >= 0x4E00 && uni <= 0x9FA5){
+            // 含有中文
+            ui->hostNameTips->setText("用户名：<a style='color: red;'><b>×</b></a>该用户名不合法（不能有中文）");
+            break;
+        }
+        if(specialSymbol.contains(userName.at(i))){
+            ui->userNameTips->setText("用户名：<a style='color: red;'><b>×</b></a>不能含有特殊符号");
+            break;
+        }
     }
 }
 
@@ -218,12 +261,52 @@ void MainWindow::on_userPassword1_textChanged(const QString &arg1)
     PasswordCheck(ui->userPasswordTips0, ui->userPasswordTips1, ui->userPassword0, ui->userPassword1, "用户密码：", "再输一次用户密码：");
 }
 
+// 获取命令输出
+QString MainWindow::GetCommandReturn(QString command){
+    QProcess process;
+    process.start(command);
+    process.waitForFinished();
+    QString result = process.readAllStandardOutput();
+    process.close();
+    return result;
+}
 
 void MainWindow::on_installButton_clicked()
 {
+    // 检测合法性
+    // 检测是否有相同挂载点
+    QList<QString> keyList = partSetMountPoint.keys();
+    QMap<QString, bool> alreadySetMountPoint;
+    for(int i = 0; i < keyList.size(); i++){
+        if(alreadySetMountPoint.count(partSetMountPoint.value(keyList.at(i)))){
+            QMessageBox::critical(this, "错误", "不能设置多个挂载点“" + partSetMountPoint.value(keyList.at(i)) + "”");
+            return;
+        }
+        alreadySetMountPoint.insert(partSetMountPoint.value(keyList.at(i)), true);
+    }
+    // 检测是否有设置挂载点 /
+    if(!alreadySetMountPoint.count("/")){
+        QMessageBox::critical(this, "错误", "没有设置挂载点“/”");
+        return;
+    }
+    // 判断是否为 UEFI 启动
+    QString info = GetCommandReturn("dmesg");
+    if(info.contains("EFI v") && !alreadySetMountPoint.count("/boot/efi")){
+        QMessageBox::critical(this, "错误", "请设置挂载点“/boot/efi”");
+        return;
+    }
+    // 检测密码
+    if(ui->rootPassword0->text() != ui->rootPassword1->text()){
+        QMessageBox::critical(this, "错误", "root 密码不相同");
+        return;
+    }
+    if(ui->userPassword0->text() != ui->userPassword1->text()){
+        QMessageBox::critical(this, "错误", "用户密码不相同");
+        return;
+    }
     // 这里先忽略合法性检测，直接显示窗口以调试
-    InstallSystemWindow *window = new InstallSystemWindow();
-    window->show();
+    //InstallSystemWindow *window = new InstallSystemWindow();
+    //window->show();
     //window->exec();
 }
 

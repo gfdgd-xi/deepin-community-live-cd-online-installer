@@ -16,6 +16,7 @@ DiskControl::DiskControl()
     }
 }
 
+// 获取命令输出
 QString DiskControl::GetCommandReturn(QString command){
     QProcess process;
     process.start(command);

@@ -8,7 +8,8 @@ InstallSystemWindow::InstallSystemWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     // 新建终端
-    QTermWidget *ter = new QTermWidget();
+    //QTermWidget *ter = new QTermWidget();
+
     //ui->verticalLayout->addWidget(ter);
 }
 
