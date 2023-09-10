@@ -5,6 +5,7 @@
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QDebug>
+#include <QHostInfo>
 #include "diskcontrol.h"
 #include "editpartdialog.h"
 #include "aboutprogram.h"
@@ -17,6 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
     // 设置程序标题
     this->setWindowTitle("Deepin Community Live CD 安装工具 " + QString(APP_VERSION));
     SetDiskList(ui->diskChooser);
+    // 读取当前用户名
+    ui->userName->setText(qgetenv("USER"));
+    // 读取当前计算机名
+    ui->hostName->setText(QHostInfo::localHostName());
+
 }
 
 MainWindow::~MainWindow()
@@ -124,6 +130,16 @@ void MainWindow::on_userName_textChanged(const QString &arg1)
 {
     // 自动清除空格
     ui->userName->setText(ui->userName->text().replace(" ", ""));
+    // 用户名检测
+    if(ui->userName->text().size() < 2){
+        ui->userNameTips->setText("用户名：<a style='color: red;'><b>×</b></a>用户名过短");
+    }
+    else if(ui->userName->text() == "root"){
+        ui->userNameTips->setText("用户名：<a style='color: red;'><b>×</b></a>该用户名不合法");
+    }
+    else{
+        ui->userNameTips->setText("用户名：<a style='color: green;'><b>√</b></a>");
+    }
 }
 
 
@@ -131,52 +147,27 @@ void MainWindow::on_hostName_textChanged(const QString &arg1)
 {
     // 自动清除空格
     ui->hostName->setText(ui->hostName->text().replace(" ", ""));
+    // 计算机名检测
+    if(ui->hostName->text().size() < 2){
+        ui->hostNameTips->setText("主机名：<a style='color: red;'><b>×</b></a>主机名过短");
+    }
+    else{
+        ui->hostNameTips->setText("主机名：<a style='color: green;'><b>√</b></a>");
+    }
 }
 
 
 void MainWindow::on_rootPassword0_textChanged(const QString &arg1)
 {
-    // 如果密码不相同就显示提示
-    if(ui->rootPassword0->text() == ui->rootPassword1->text()){
-        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
-        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: green;'><b>√</b></a>");
-    }
-    else{
-        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>两次密码不相同！");
-    }
-    // 空密码提示
-    if(ui->rootPassword0->text() == ""){
-        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
-    }
-    else{
-        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
-    }
-    if(ui->rootPassword1->text() == ""){
-        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
-    }
+    // 检查密码
+    PasswordCheck(ui->rootPasswordTips0, ui->rootPasswordTips1, ui->rootPassword0, ui->rootPassword1, "root 用户密码：", "再输一次root用户密码：");
 }
 
 
 void MainWindow::on_rootPassword1_textChanged(const QString &arg1)
 {
-    // 如果密码不相同就显示提示
-    if(ui->rootPassword0->text() == ui->rootPassword1->text()){
-        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
-        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: green;'><b>√</b></a>");
-    }
-    else{
-        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>两次密码不相同！");
-    }
-    // 空密码提示
-    if(ui->rootPassword0->text() == ""){
-        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
-    }
-    else{
-        ui->rootPasswordTips0->setText("root 用户密码：<a style='color: green;'><b>√</b></a>");
-    }
-    if(ui->rootPassword1->text() == ""){
-        ui->rootPasswordTips1->setText("再输一次root用户密码：<a style='color: red;'><b>×</b></a>密码不能为空");
-    }
+    // 检查密码
+    PasswordCheck(ui->rootPasswordTips0, ui->rootPasswordTips1, ui->rootPassword0, ui->rootPassword1, "root 用户密码：", "再输一次root用户密码：");
 }
 
 
@@ -188,5 +179,41 @@ void MainWindow::on_action_about_triggered()
     program.setAttribute(Qt::WA_ShowModal, true);
     program.show();
     program.exec();
+}
+
+// 密码检查
+// （方便复用）
+void MainWindow::PasswordCheck(QLabel *label0, QLabel *label1, QLineEdit *password0, QLineEdit *password1, QString labelTips0, QString labelTips1){
+    // 如果密码不相同就显示提示
+    if(password0->text() == password1->text()){
+        label0->setText(labelTips0 + "<a style='color: green;'><b>√</b></a>");
+        label1->setText(labelTips1 + "<a style='color: green;'><b>√</b></a>");
+    }
+    else{
+        label1->setText(labelTips1 + "<a style='color: red;'><b>×</b></a>两次密码不相同！");
+    }
+    // 空密码提示
+    if(password0->text() == ""){
+        label0->setText(labelTips0 + "<a style='color: red;'><b>×</b></a>密码不能为空");
+    }
+    else{
+        label0->setText(labelTips0 + "<a style='color: green;'><b>√</b></a>");
+    }
+    if(password1->text() == ""){
+        label1->setText(labelTips1 + "<a style='color: red;'><b>×</b></a>密码不能为空");
+    }
+}
+
+void MainWindow::on_userPassword0_textChanged(const QString &arg1)
+{
+    // 检查密码
+    PasswordCheck(ui->userPasswordTips0, ui->userPasswordTips1, ui->userPassword0, ui->userPassword1, "用户密码：", "再输一次用户密码：");
+}
+
+
+void MainWindow::on_userPassword1_textChanged(const QString &arg1)
+{
+    // 检查密码
+    PasswordCheck(ui->userPasswordTips0, ui->userPasswordTips1, ui->userPassword0, ui->userPassword1, "用户密码：", "再输一次用户密码：");
 }
 

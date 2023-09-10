@@ -147,7 +147,7 @@
          <item>
           <widget class="QLabel" name="rootPasswordTips0">
            <property name="text">
-            <string>root 用户密码：</string>
+            <string>root 用户密码：&lt;a style='color: red;'&gt;&lt;b&gt;×&lt;/b&gt;&lt;/a&gt;没有填写</string>
            </property>
           </widget>
          </item>
@@ -161,7 +161,7 @@
          <item>
           <widget class="QLabel" name="rootPasswordTips1">
            <property name="text">
-            <string>再输一次root用户密码：</string>
+            <string>再输一次root用户密码：&lt;a style='color: red;'&gt;&lt;b&gt;×&lt;/b&gt;&lt;/a&gt;没有填写</string>
            </property>
           </widget>
          </item>
@@ -182,7 +182,7 @@
          <item>
           <widget class="QLabel" name="userNameTips">
            <property name="text">
-            <string>用户名：</string>
+            <string>用户名：&lt;a style='color: red;'&gt;&lt;b&gt;×&lt;/b&gt;&lt;/a&gt;没有填写</string>
            </property>
           </widget>
          </item>
@@ -196,7 +196,7 @@
          <item>
           <widget class="QLabel" name="userPasswordTips0">
            <property name="text">
-            <string>用户密码：</string>
+            <string>用户密码：&lt;a style='color: red;'&gt;&lt;b&gt;×&lt;/b&gt;&lt;/a&gt;没有填写</string>
            </property>
           </widget>
          </item>
@@ -210,7 +210,7 @@
          <item>
           <widget class="QLabel" name="userPasswordTips1">
            <property name="text">
-            <string>再输一次用户密码：</string>
+            <string>再输一次用户密码：&lt;a style='color: red;'&gt;&lt;b&gt;×&lt;/b&gt;&lt;/a&gt;没有填写</string>
            </property>
           </widget>
          </item>
@@ -231,7 +231,7 @@
          <item>
           <widget class="QLabel" name="hostNameTips">
            <property name="text">
-            <string>主机名：</string>
+            <string>主机名：&lt;a style='color: red;'&gt;&lt;b&gt;×&lt;/b&gt;&lt;/a&gt;没有填写</string>
            </property>
           </widget>
          </item>

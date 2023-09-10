@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QTableView>
+#include <QLabel>
+#include <QLineEdit>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,11 +35,16 @@ private slots:
 
     void on_action_about_triggered();
 
+    void on_userPassword0_textChanged(const QString &arg1);
+
+    void on_userPassword1_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     void SetDiskList(QTableView *diskListWidget);
     QStringList GetDiskList();
     QMap<QString, QString> partSetMountPoint;
     QMap<QString, QString> partSetPartFormat;
+    void PasswordCheck(QLabel *label0, QLabel *label1, QLineEdit *password0, QLineEdit *password1, QString labelTips0, QString labelTips1);
 };
 #endif // MAINWINDOW_H
