@@ -43,7 +43,7 @@ Thumbs.db
 
 # Vim temporary files
 .*.swp
-
+build-installer-Qt_5_15_6_in_PATH_qt5-Debug
 # Visual Studio generated files
 *.ib_pdb_index
 *.idb
