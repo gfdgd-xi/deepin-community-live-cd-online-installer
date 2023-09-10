@@ -46,4 +46,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     icon.qrc
-unix:!macx: LIBS += -lqtermwidget5
+
+unix:!macx: LIBS += -lqtermwidget5  # 这一行让我查了好久
