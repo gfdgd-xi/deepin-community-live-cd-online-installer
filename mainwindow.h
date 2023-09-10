@@ -39,6 +39,8 @@ private slots:
 
     void on_userPassword1_textChanged(const QString &arg1);
 
+    void on_installButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     void SetDiskList(QTableView *diskListWidget);

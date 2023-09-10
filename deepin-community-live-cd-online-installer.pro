@@ -1,4 +1,5 @@
 QT       += core gui network
+#QT       += qtermwidget
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,6 +17,7 @@ SOURCES += \
     aboutprogram.cpp \
     diskcontrol.cpp \
     editpartdialog.cpp \
+    installsystemwindow.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -23,11 +25,13 @@ HEADERS += \
     aboutprogram.h \
     diskcontrol.h \
     editpartdialog.h \
+    installsystemwindow.h \
     mainwindow.h
 
 FORMS += \
     aboutprogram.ui \
     editpartdialog.ui \
+    installsystemwindow.ui \
     mainwindow.ui
 
 TRANSLATIONS += \

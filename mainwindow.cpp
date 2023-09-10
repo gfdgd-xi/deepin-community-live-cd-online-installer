@@ -9,6 +9,7 @@
 #include "diskcontrol.h"
 #include "editpartdialog.h"
 #include "aboutprogram.h"
+#include "installsystemwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -215,5 +216,14 @@ void MainWindow::on_userPassword1_textChanged(const QString &arg1)
 {
     // 检查密码
     PasswordCheck(ui->userPasswordTips0, ui->userPasswordTips1, ui->userPassword0, ui->userPassword1, "用户密码：", "再输一次用户密码：");
+}
+
+
+void MainWindow::on_installButton_clicked()
+{
+    // 这里先忽略合法性检测，直接显示窗口以调试
+    InstallSystemWindow *window = new InstallSystemWindow();
+    window->show();
+    //window->exec();
 }
 
