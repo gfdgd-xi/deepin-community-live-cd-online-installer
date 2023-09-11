@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMessageBox>
 #include <qtermwidget5/qtermwidget.h>
+#include <QThread>
 //#include <qtermwidget5/Emulation.h>
 
 InstallSystemWindow::InstallSystemWindow(QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QWidget *parent) :
