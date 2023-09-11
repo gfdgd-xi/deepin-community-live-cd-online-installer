@@ -12,7 +12,7 @@ class InstallSystemWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit InstallSystemWindow(QWidget *parent = nullptr);
+    explicit InstallSystemWindow(QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QWidget *parent = nullptr);
     ~InstallSystemWindow();
 
 private:

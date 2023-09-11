@@ -17,16 +17,20 @@ SOURCES += \
     aboutprogram.cpp \
     diskcontrol.cpp \
     editpartdialog.cpp \
+    installsystem.cpp \
     installsystemwindow.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    runcommandinterminal.cpp
 
 HEADERS += \
     aboutprogram.h \
     diskcontrol.h \
     editpartdialog.h \
+    installsystem.h \
     installsystemwindow.h \
-    mainwindow.h
+    mainwindow.h \
+    runcommandinterminal.h
 
 FORMS += \
     aboutprogram.ui \
