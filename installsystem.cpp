@@ -60,11 +60,15 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     this->command->AddCommand("chroot /tmp/dclc-installer apt update");
     // 安装内核
     this->command->AddCommand("chroot /tmp/dclc-installer apt install linux-headers-amd64 linux-image-amd64 -y");
+    // Flag: root密码设置以及创建用户密码
+    // 设置 /sbin 下的命令可以被直接运行而无需用 /sbin/xxx 的形式
+    // 支持安装桌面环境（Debian 为 xfce4，deepin 为 dde）
+    // 支持设置为中文
     // 设置引导
     this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common -y");
     this->command->AddCommand("chroot /tmp/dclc-installer grub-mkconfig -o /boot/grub/grub.cfg");
     // 如果是传统启动
-    this->command->AddCommand("chroot /tmp/dclc-installer grub-install --target=i386-pc --bootloader-id=GRUB");
+    this->command->AddCommand("chroot /tmp/dclc-installer grub-install /dev/xxx"); // 有问题
     // UEFI 启动
     // this->command->AddCommand("grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB");
     this->command->AddCommand("chroot /tmp/dclc-installer update-grub2");
