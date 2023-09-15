@@ -32,7 +32,7 @@ void RunCommandInTerminal::RunCommand(){
     this->terminal->setColorScheme("DarkPastels");
     this->terminal->setShellProgram("/usr/bin/bash");
     this->terminal->setArgs(QStringList() << bashPath);
-    this->terminal->setAutoClose(1);
+    //this->terminal->setAutoClose(1);
     this->terminal->setAutoFillBackground(1);
     this->terminal->startShellProgram();
 }
