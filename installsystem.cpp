@@ -58,7 +58,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     }
     // 设置引导
     this->command->AddCommand("chroot /tmp/dclc-installer apt update");
-    this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common");
+    this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common -y");
     this->command->AddCommand("chroot /tmp/dclc-installer grub-mkconfig -o /boot/grub/grub.cfg");
     // 如果是传统启动
     this->command->AddCommand("chroot /tmp/dclc-installer grub-install --target=i386-pc --bootloader-id=GRUB");
