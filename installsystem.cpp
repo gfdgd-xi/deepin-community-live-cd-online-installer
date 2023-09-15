@@ -56,8 +56,11 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
             break;
         }
     }
-    // 设置引导
+    // 刷新软件列表
     this->command->AddCommand("chroot /tmp/dclc-installer apt update");
+    // 安装内核
+    this->command->AddCommand("chroot /tmp/dclc-installer apt install linux-headers-amd64 linux-image-amd64 -y");
+    // 设置引导
     this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common -y");
     this->command->AddCommand("chroot /tmp/dclc-installer grub-mkconfig -o /boot/grub/grub.cfg");
     // 如果是传统启动
