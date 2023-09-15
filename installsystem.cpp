@@ -20,15 +20,17 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     // 挂载分区
     this->command->AddCommand("umount /tmp/dclc-installer");
     this->command->AddCommand("mkdir -p -v /tmp/dclc-installer");
+    QString rootPath = "";
     list = partSetMountPoint.keys();
     for (int i = 0; i < list.size(); i++) {
         if(partSetMountPoint[list[i]] == "/"){
             this->command->AddCommand("mount '" + list[i] + "' /tmp/dclc-installer");
+            rootPath = list[i];
             break;
         }
     }
     // 获取 Debian Base System
-    this->command->AddCommand("debootstrap bookworm /tmp/dclc-installer");
+    this->command->AddCommand("debootstrap bookworm /tmp/dclc-installer https://mirrors.sjtug.sjtu.edu.cn/");
     // 挂载挂载点
     this->command->AddCommand("mount --bind /dev /tmp/dclc-installer/dev");
     this->command->AddCommand("mount --bind /run /tmp/dclc-installer/run");
@@ -60,6 +62,8 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     this->command->AddCommand("chroot /tmp/dclc-installer apt update");
     // 安装内核
     this->command->AddCommand("chroot /tmp/dclc-installer apt install linux-headers-amd64 linux-image-amd64 -y");
+    // 安装 xfce4 桌面
+    this->command->AddCommand("chroot /tmp/dclc-installer apt install xfce4 lightdm -y");
     // Flag: root密码设置以及创建用户密码
     // 设置 /sbin 下的命令可以被直接运行而无需用 /sbin/xxx 的形式
     // 支持安装桌面环境（Debian 为 xfce4，deepin 为 dde）
@@ -68,7 +72,12 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common -y");
     this->command->AddCommand("chroot /tmp/dclc-installer grub-mkconfig -o /boot/grub/grub.cfg");
     // 如果是传统启动
-    this->command->AddCommand("chroot /tmp/dclc-installer grub-install /dev/xxx"); // 有问题
+    QString rootPathDisk = rootPath;
+    for(int i = 0; i < 10; i++){
+        rootPathDisk = rootPathDisk.replace(QString::number(i), "");
+    }
+
+    this->command->AddCommand("chroot /tmp/dclc-installer grub-install '" + rootPathDisk + "'"); // 有问题
     // UEFI 启动
     // this->command->AddCommand("grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB");
     this->command->AddCommand("chroot /tmp/dclc-installer update-grub2");
