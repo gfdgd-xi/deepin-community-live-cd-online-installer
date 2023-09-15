@@ -78,6 +78,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     if(bootPath != ""){
         this->command->AddCommand("umount /tmp/dclc-installer/boot/");
     }
+    this->command->AddCommand("umount /tmp/dclc-installer");
     this->command->AddCommand("read");
     this->command->RunCommand();
 }
