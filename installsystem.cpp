@@ -30,7 +30,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
         }
     }
     // 获取 Debian Base System
-    this->command->AddCommand("debootstrap bookworm /tmp/dclc-installer https://mirrors.sjtug.sjtu.edu.cn/");
+    this->command->AddCommand("debootstrap bookworm /tmp/dclc-installer https://mirrors.sjtug.sjtu.edu.cn/debian");
     // 挂载挂载点
     this->command->AddCommand("mount --bind /dev /tmp/dclc-installer/dev");
     this->command->AddCommand("mount --bind /run /tmp/dclc-installer/run");
