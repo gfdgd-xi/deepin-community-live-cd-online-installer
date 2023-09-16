@@ -64,7 +64,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     // 安装内核
     this->command->AddCommand("chroot /tmp/dclc-installer apt install linux-headers-amd64 linux-image-amd64 -y");
     // 安装 gnome 桌面
-    this->command->AddCommand("chroot /tmp/dclc-installer apt install gnome gdm3 sudo neofetch -y --install-recommends --install-suggests");
+    this->command->AddCommand("chroot /tmp/dclc-installer apt install gnome gdm3 sudo neofetch locales-all -y --install-recommends --install-suggests");
     // 设置时区为 Shanghai
     this->command->AddCommand("chroot /tmp/dclc-installer cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime");
     // 设置 root 密码
@@ -74,7 +74,8 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     // 设置 /sbin 下的命令可以被直接运行而无需用 /sbin/xxx 的形式
     this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo 'export PATH=$PATH:/sbin' > /etc/profile\"");
     // 支持安装桌面环境（Debian 为 xfce4，deepin 为 dde）
-    // 支持设置为中文
+    // 设置为中文
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"LANG=zh_CN.UTF-8\\nLANGUAGE=zh_CN' > /etc/default/locale\"");
     // 网络和声音
     // 写入 /etc/fstab !!!!
     DiskControl diskControl;
