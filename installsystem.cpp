@@ -64,7 +64,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     // 安装内核
     this->command->AddCommand("chroot /tmp/dclc-installer apt install linux-headers-amd64 linux-image-amd64 -y");
     // 安装 gnome 桌面
-    this->command->AddCommand("chroot /tmp/dclc-installer apt install gnome gdm3 -y");
+    this->command->AddCommand("chroot /tmp/dclc-installer apt install gnome gdm3 sudo neofetch -y --install-recommends --install-suggests");
     // 设置时区为 Shanghai
     this->command->AddCommand("chroot /tmp/dclc-installer cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime");
     // Flag: root密码设置以及创建用户密码
