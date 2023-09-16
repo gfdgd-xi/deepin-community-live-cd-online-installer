@@ -5,7 +5,7 @@
 #include <qtermwidget5/qtermwidget.h>
 #include <QProgressBar>
 
-InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QString system="sid")
+InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QString rootPassword, QString userName, QString userPassword, QString hostName, QString system="sid")
 {
     this->terminal = terminal;
     this->progressbar = progressbar;
@@ -67,8 +67,12 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     this->command->AddCommand("chroot /tmp/dclc-installer apt install gnome gdm3 sudo neofetch -y --install-recommends --install-suggests");
     // 设置时区为 Shanghai
     this->command->AddCommand("chroot /tmp/dclc-installer cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime");
-    // Flag: root密码设置以及创建用户密码
+    // 设置 root 密码
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo -e '" + rootPassword.replace("'", "\\'") + "\n" + rootPassword.replace("'", "\\'") + "' | passwd root\"");
+    // 创建用户并设置用户密码
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo -e '" + userPassword.replace("'", "\\'") + "\n" + userPassword.replace("'", "\\'") + "\n\n\n\n\n\n\n\n\n\n' | adduser --quiet '" + userName + "' --ingroup sudo\"");
     // 设置 /sbin 下的命令可以被直接运行而无需用 /sbin/xxx 的形式
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo 'export PATH=$PATH:/sbin' > /etc/profile\"");
     // 支持安装桌面环境（Debian 为 xfce4，deepin 为 dde）
     // 支持设置为中文
     // 网络和声音

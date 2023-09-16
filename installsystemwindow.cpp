@@ -7,14 +7,15 @@
 #include <QThread>
 //#include <qtermwidget5/Emulation.h>
 
-InstallSystemWindow::InstallSystemWindow(QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QString systemChoose, QWidget *parent) :
+InstallSystemWindow::InstallSystemWindow(QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint,
+                                         QString systemChoose, QString rootPassword, QString userName, QString userPassword, QString hostName, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::InstallSystemWindow)
 {
     ui->setupUi(this);
     QTermWidget *ter = new QTermWidget(0);
     ui->verticalLayout->addWidget(ter);
-    InstallSystem *system = new InstallSystem(ter, ui->progressBar, partSetPartFormat, partSetMountPoint, systemChoose);
+    InstallSystem *system = new InstallSystem(ter, ui->progressBar, partSetPartFormat, partSetMountPoint, systemChoose, rootPassword, userName, userPassword, hostName);
     /*ter->setColorScheme("DarkPastels");
     ter->setShellProgram("/usr/bin/bash");
     ter->setArgs(QStringList() << "-c" << "gedit");

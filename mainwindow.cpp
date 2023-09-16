@@ -343,7 +343,8 @@ void MainWindow::on_installButton_clicked()
         }
     }
     // 检测正常，开始安装
-    InstallSystemWindow *window = new InstallSystemWindow(this->partSetPartFormat, this->partSetMountPoint, ui->systemChooser->currentText());
+    InstallSystemWindow *window = new InstallSystemWindow(this->partSetPartFormat, this->partSetMountPoint, ui->systemChooser->currentText(),
+                                                          ui->rootPassword0->text(), ui->userName->text(), ui->userPassword0->text(), ui->hostName->text());
     window->show();
     //window->exec();
 }
