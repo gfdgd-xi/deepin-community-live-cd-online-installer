@@ -26,6 +26,13 @@ QString DiskControl::GetCommandReturn(QString command){
     return result;
 }
 
+QString DiskControl::GetDiskUUID(QString disk){
+    QString result = GetCommandReturn("blkid '" + disk + "'");
+    // 筛选字符串
+    QString str = result.split(":").value(1);
+    return GetCommandReturn("bash -c 'export " + str + " ; echo $UUID'");
+}
+
 void DiskControl::GetDiskInfo(QStringList *diskPath, QStringList *diskFormat, QStringList *freeSpaceList, QStringList *totalSpaceList, QStringList *mountPathList){
     // 清空列表
     diskPath->clear();

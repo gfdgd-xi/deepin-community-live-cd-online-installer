@@ -273,10 +273,6 @@ QString MainWindow::GetCommandReturn(QString command){
 
 void MainWindow::on_installButton_clicked()
 {
-    // 这里先忽略合法性检测，直接显示窗口以调试
-    InstallSystemWindow *window = new InstallSystemWindow(this->partSetPartFormat, this->partSetMountPoint);
-    window->show();
-    return;
     // 检测合法性
     // 检测是否有相同挂载点
     QList<QString> keyList = partSetMountPoint.keys();
@@ -346,7 +342,9 @@ void MainWindow::on_installButton_clicked()
             break;
         }
     }
-
+    // 检测正常，开始安装
+    InstallSystemWindow *window = new InstallSystemWindow(this->partSetPartFormat, this->partSetMountPoint, ui->systemChooser->currentText());
+    window->show();
     //window->exec();
 }
 

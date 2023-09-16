@@ -10,6 +10,7 @@ private:
 
 public:
     DiskControl();
+    QString GetDiskUUID(QString disk);
 
     void GetDiskInfo(QStringList *diskPath, QStringList *diskFormat, QStringList *freeSpaceList, QStringList *totalSpaceList, QStringList *mountPathList);
 };
