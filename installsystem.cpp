@@ -68,9 +68,9 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     // 设置时区为 Shanghai
     this->command->AddCommand("chroot /tmp/dclc-installer cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime");
     // 设置 root 密码
-    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo -e '" + rootPassword.replace("'", "\\'") + "\n" + rootPassword.replace("'", "\\'") + "' | passwd root\"");
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo -e '" + rootPassword.replace("'", "\\'") + "\\n" + rootPassword.replace("'", "\\'") + "' | passwd root\"");
     // 创建用户并设置用户密码
-    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo -e '" + userPassword.replace("'", "\\'") + "\n" + userPassword.replace("'", "\\'") + "\n\n\n\n\n\n\n\n\n\n' | adduser --quiet '" + userName + "' --ingroup sudo\"");
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo -e '" + userPassword.replace("'", "\\'") + "\\n" + userPassword.replace("'", "\\'") + "\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n' | adduser --quiet '" + userName + "' --ingroup sudo\"");
     // 设置 /sbin 下的命令可以被直接运行而无需用 /sbin/xxx 的形式
     this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo 'export PATH=$PATH:/sbin' > /etc/profile\"");
     // 支持安装桌面环境（Debian 为 xfce4，deepin 为 dde）
