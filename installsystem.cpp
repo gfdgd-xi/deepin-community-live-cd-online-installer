@@ -74,9 +74,9 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     // 网络和声音
     // 写入 /etc/fstab !!!!
     DiskControl diskControl;
-    this->command->AddCommand("echo 'UUID=" + diskControl.GetDiskUUID(rootPath) + " / ext4 rw,relatime 0 1' > /etc/fstab");
+    this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo 'UUID=" + diskControl.GetDiskUUID(rootPath) + " / ext4 rw,relatime 0 1' > /etc/fstab\"");
     if(bootEFIPath != ""){
-        this->command->AddCommand("echo 'UUID=" + diskControl.GetDiskUUID(bootEFIPath) + " /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 2' >> /etc/fstab");
+        this->command->AddCommand("chroot /tmp/dclc-installer bash -c \"echo 'UUID=" + diskControl.GetDiskUUID(bootEFIPath) + " /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 2' >> /etc/fstab\"");
     }
     // 设置引导
     this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common -y");
