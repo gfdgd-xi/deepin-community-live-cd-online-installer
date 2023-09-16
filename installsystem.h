@@ -10,7 +10,7 @@
 class InstallSystem
 {
 public:
-    InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint);
+    InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QString system);
 private:
     QTermWidget *terminal;
     QProgressBar *progressbar;

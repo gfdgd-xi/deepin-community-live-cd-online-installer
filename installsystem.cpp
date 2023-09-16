@@ -1,10 +1,11 @@
 #include "installsystem.h"
 #include "runcommandinterminal.h"
+#include "diskcontrol.h"
 #include <QFile>
 #include <qtermwidget5/qtermwidget.h>
 #include <QProgressBar>
 
-InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint)
+InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, QMap<QString, QString> partSetPartFormat, QMap<QString, QString> partSetMountPoint, QString system="sid")
 {
     this->terminal = terminal;
     this->progressbar = progressbar;
@@ -15,7 +16,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     QStringList list = partSetPartFormat.keys();
     for (int i = 0; i < list.size(); i++) {
         this->command->AddCommand("umount '" + list[i] + "'");
-        this->command->AddCommand("mkfs." + partSetPartFormat[list[i]] + " -V '" + list[i] + "'");
+        this->command->AddCommand("mkfs." + partSetPartFormat[list[i]] + " '" + list[i] + "'");
     }
     // 挂载分区
     this->command->AddCommand("umount /tmp/dclc-installer");
@@ -30,7 +31,7 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
         }
     }
     // 获取 Debian Base System
-    this->command->AddCommand("debootstrap bookworm /tmp/dclc-installer https://mirrors.sjtug.sjtu.edu.cn/");
+    this->command->AddCommand("debootstrap bookworm /tmp/dclc-installer https://mirrors.sjtug.sjtu.edu.cn/debian");
     // 挂载挂载点
     this->command->AddCommand("mount --bind /dev /tmp/dclc-installer/dev");
     this->command->AddCommand("mount --bind /run /tmp/dclc-installer/run");
@@ -62,12 +63,21 @@ InstallSystem::InstallSystem(QTermWidget *terminal, QProgressBar *progressbar, Q
     this->command->AddCommand("chroot /tmp/dclc-installer apt update");
     // 安装内核
     this->command->AddCommand("chroot /tmp/dclc-installer apt install linux-headers-amd64 linux-image-amd64 -y");
-    // 安装 xfce4 桌面
-    this->command->AddCommand("chroot /tmp/dclc-installer apt install xfce4 lightdm -y");
+    // 安装 gnome 桌面
+    this->command->AddCommand("chroot /tmp/dclc-installer apt install gnome gdm3 -y");
+    // 设置时区为 Shanghai
+    this->command->AddCommand("chroot /tmp/dclc-installer cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime");
     // Flag: root密码设置以及创建用户密码
     // 设置 /sbin 下的命令可以被直接运行而无需用 /sbin/xxx 的形式
     // 支持安装桌面环境（Debian 为 xfce4，deepin 为 dde）
     // 支持设置为中文
+    // 网络和声音
+    // 写入 /etc/fstab !!!!
+    DiskControl diskControl;
+    this->command->AddCommand("echo 'UUID=" + diskControl.GetDiskUUID(rootPath) + " / ext4 rw,relatime 0 1' > /etc/fstab");
+    if(bootEFIPath != ""){
+        this->command->AddCommand("echo 'UUID=" + diskControl.GetDiskUUID(bootEFIPath) + " /boot/efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 2' >> /etc/fstab");
+    }
     // 设置引导
     this->command->AddCommand("chroot /tmp/dclc-installer apt install grub-pc grub-common -y");
     this->command->AddCommand("chroot /tmp/dclc-installer grub-mkconfig -o /boot/grub/grub.cfg");
